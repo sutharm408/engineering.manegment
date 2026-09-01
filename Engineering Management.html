@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<!-- saved from url=(0062)file:///C:/Users/meets/Downloads/Engineering%20Management.html -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Engineering Management</title>
+<script src="./Engineering Management_files/xlsx.bundle.js.download"></script>
+<script src="./Engineering Management_files/firebase-app-compat.js.download"></script>
+<script src="./Engineering Management_files/firebase-firestore-compat.js.download"></script>
+<script src="./Engineering Management_files/firebase-auth-compat.js.download"></script>
+<style>
+:root{
+  --bg:#f4f4f2;--panel:#fff;--dark:#171717;--muted:#6f7378;
+  --line:#e5e6e8;--red:#ed3029;--green:#2f9e6f;--shadow:0 10px 30px rgba(0,0,0,.06)
+}
+*{box-sizing:border-box} body{margin:0;font-family:Inter,Segoe UI,Arial,sans-serif;background:var(--bg);color:#24272b}
+.app{display:grid;grid-template-columns:240px 1fr;min-height:100vh}
+.sidebar{background:linear-gradient(#1d1d1d,#090909);color:#eee;padding:20px 12px;display:flex;flex-direction:column}
+.brand{font-size:28px;font-weight:900;letter-spacing:3px;color:#ff4b43;margin:0 8px 6px}.tag{font-size:9px;letter-spacing:2px;color:#ff746f;font-weight:800;margin:0 8px 20px}
+.navtitle{font-size:10px;letter-spacing:2px;color:#767676;margin:22px 10px 8px;font-weight:800}
+.nav button{width:100%;border:0;background:transparent;color:#cfd0d2;text-align:left;padding:12px 14px;border-radius:9px;margin:2px 0;font-weight:700;cursor:pointer}
+.nav button:hover,.nav button.active{background:var(--red);color:#fff}.sidefoot{margin-top:auto;border-top:1px solid #2b2b2b;padding:16px 8px;color:#8d8d8d;font-size:12px}
+.main{padding:20px;max-width:1600px;width:100%;margin:auto}.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}.top h1{margin:0;font-size:26px}.top p{margin:5px 0;color:var(--muted)}
+.date{background:#fff;border:1px solid var(--line);padding:10px 14px;border-radius:10px;color:var(--muted);font-size:13px}
+.hero{background:linear-gradient(120deg,#fff,#f7f7f6);border:1px solid var(--line);box-shadow:var(--shadow);border-radius:20px;padding:24px;margin-bottom:18px}
+.hero small{letter-spacing:2px;color:#8b8e92;font-weight:800}.hero h2{margin:8px 0 0;font-size:25px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:18px}
+.card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:20px;box-shadow:var(--shadow)}
+.card.dark{background:linear-gradient(135deg,#2a2a2a,#0c0c0c);color:#fff}.card.red{background:linear-gradient(135deg,#e9443d,#b71915);color:#fff}
+.label{font-size:10px;letter-spacing:2px;font-weight:800;color:#7e8288}.dark .label,.red .label{color:#e6e6e6}.value{font-size:30px;font-weight:850;margin:18px 0 5px}.sub{font-size:12px;color:#7e8288}.dark .sub,.red .sub{color:#ddd}
+.grid{display:grid;grid-template-columns:1.5fr 1fr;gap:18px}.section{background:#fff;border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);overflow:hidden}
+.sectionhead{padding:18px 20px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between}.sectionhead h3{margin:0;font-size:16px}.btn{border:0;background:var(--dark);color:#fff;border-radius:9px;padding:10px 14px;font-weight:700;cursor:pointer}.btn.red{background:var(--red)}.btn.light{background:#fff;color:#333;border:1px solid var(--line)}
+.tablewrap{overflow:auto}.data{width:100%;border-collapse:collapse;font-size:13px}.data th{font-size:10px;letter-spacing:1.2px;color:#74777c;text-align:left;padding:14px 16px;background:#fafafa}.data td{padding:14px 16px;border-top:1px solid #eee}.amount{font-weight:800}.positive{color:var(--green)}.negative{color:#e02c27}
+.empty{padding:45px;text-align:center;color:#8b8e92}
+.quick{padding:16px}.quick button{display:block;width:100%;margin-bottom:10px;text-align:left}
+.formgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;padding:18px}.full{grid-column:1/-1}
+input,select{width:100%;padding:11px 12px;border:1px solid #dfe1e4;border-radius:9px;font:inherit;background:#fff}
+.actions{display:flex;gap:8px}.iconbtn{border:1px solid var(--line);background:#fff;border-radius:7px;padding:7px 9px;cursor:pointer}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.42);display:none;align-items:center;justify-content:center;padding:18px;z-index:10}.modal.show{display:flex}.modalbox{width:min(680px,100%);background:#fff;border-radius:18px;box-shadow:0 20px 60px rgba(0,0,0,.25);overflow:hidden}.modalhead{padding:18px 20px;display:flex;justify-content:space-between;border-bottom:1px solid var(--line)}.modalhead h3{margin:0}.modalfoot{padding:16px 18px;border-top:1px solid var(--line);display:flex;justify-content:flex-end;gap:10px}
+.toast{position:fixed;right:20px;bottom:20px;background:#1c1c1c;color:#fff;padding:12px 16px;border-radius:10px;display:none;z-index:20}
+.badge{padding:4px 8px;border-radius:20px;background:#eaf7f0;color:#287d59;font-size:11px;font-weight:800}
+@media(max-width:950px){.app{grid-template-columns:1fr}.sidebar{display:none}.stats{grid-template-columns:repeat(2,1fr)!important}.grid{grid-template-columns:1fr}}
+@media(max-width:550px){.main{padding:12px}.stats{grid-template-columns:1fr}.formgrid{grid-template-columns:1fr}.full{grid-column:auto}.top{align-items:flex-start;gap:8px;flex-direction:column}}
+.loginwrap{position:fixed;inset:0;background:linear-gradient(135deg,#171717,#0c0c0c);display:flex;align-items:center;justify-content:center;z-index:100;padding:16px}
+.loginbox{background:#fff;border-radius:20px;box-shadow:0 20px 60px rgba(0,0,0,.4);padding:32px;width:min(380px,100%)}
+.loginbox h2{margin:0 0 4px;font-size:22px}.loginbox p{margin:0 0 22px;color:var(--muted);font-size:13px}
+.loginbox label{font-size:12px;font-weight:700;color:var(--muted);display:block;margin:14px 0 6px}
+.loginbox .btn{width:100%;margin-top:20px;padding:12px}
+.loginerr{color:var(--red);font-size:12px;margin-top:10px;min-height:16px}
+.loginswitch{text-align:center;margin-top:16px;font-size:13px;color:var(--muted)}
+.loginswitch a{color:var(--red);font-weight:700;cursor:pointer;text-decoration:none}
+.loginbrand{font-size:22px;font-weight:900;letter-spacing:3px;color:var(--red);margin-bottom:2px}
+</style>
+</head>
+<body>
+<div class="loginwrap" id="loginScreen" style="display: none;">
+  <div class="loginbox">
+    <div class="loginbrand">ENGINEERING</div><p style="margin-bottom:20px">Management System — Login</p>
+    <div id="loginTitle" style="font-weight:800;font-size:18px">Login to your account</div>
+    <label>Email</label><input id="auth_email" type="email" placeholder="you@example.com" value="sutharm408@gmail.com">
+    <label>Password</label><input id="auth_password" type="password" placeholder="Enter password">
+    <button class="btn red" id="authBtn" onclick="doLogin()">Login</button>
+    <div class="loginerr" id="authErr"></div>
+    <div class="loginswitch" id="authSwitch">New here? <a onclick="toggleAuthMode()">Create an account</a></div>
+  </div>
+</div>
+<div class="app" id="appRoot" style="display: grid;">
+<aside class="sidebar">
+  <div class="brand">ENGINEERING</div><div class="tag">MANAGEMENT SYSTEM</div>
+  <div class="nav">
+    <div class="navtitle">OPERATIONS</div>
+    <button class="active" onclick="showPage(&#39;dashboard&#39;,this)">▦ &nbsp; Dashboard</button>
+    <button onclick="showPage(&#39;parties&#39;,this)" class="">♙ &nbsp; Party Management</button>
+    <button onclick="showPage(&#39;products&#39;,this)" class="">▣ &nbsp; Product Management</button>
+    <button onclick="showPage(&#39;payments&#39;,this)" class="">₹ &nbsp; Payment History</button>
+    <div class="navtitle">DATA</div>
+    <button onclick="exportAllExcel()">📊 &nbsp; Export Excel</button>
+    <button onclick="exportData()">⇩ &nbsp; Export Backup</button>
+    <button onclick="document.getElementById(&#39;importFile&#39;).click()">⇧ &nbsp; Import Backup</button>
+    <input id="importFile" type="file" accept=".json" hidden="" onchange="importData(event)">
+    <button onclick="clearData()">⌫ &nbsp; Clear All Data</button>
+  </div>
+  <div class="sidefoot" id="syncStatus">☁ Cloud sync: active<br><small>Live across all devices</small></div>
+  <div class="sidefoot" id="accountBox" style="display: block;">
+    Logged in as:<br><b id="accountEmail" style="color:#fff;word-break:break-all">sutharm408@gmail.com</b><br>
+    <button class="btn light" style="width:100%;margin-top:8px;font-size:11px;padding:6px" onclick="doLogout()">Logout</button>
+  </div>
+</aside>
+<main class="main">
+  <div class="top"><div><h1 id="pageTitle">Dashboard</h1><p id="pageSub">Your party, product and payment overview.</p></div><div class="date" id="today">01 Sept 2026</div></div>
+
+  <section id="dashboard" class="page" style="display: block;">
+    <div class="hero"><small>BUSINESS OVERVIEW</small><h2>Manage your complete business in one place</h2></div>
+    <div class="stats" style="grid-template-columns:repeat(5,1fr)">
+      <div class="card dark"><div class="label">TOTAL PARTIES</div><div class="value" id="partyCount">1</div><div class="sub">Customers &amp; suppliers</div></div>
+      <div class="card red"><div class="label">TOTAL PRODUCTS</div><div class="value" id="productCount">9</div><div class="sub">Products in master list</div></div>
+      <div class="card"><div class="label">TOTAL QTY</div><div class="value" id="qtyTotal">11</div><div class="sub">Current recorded quantity</div></div>
+      <div class="card"><div class="label">PAYMENT RECEIVED</div><div class="value positive" id="receivedTotal">₹8,500</div><div class="sub">Total amount received</div></div>
+      <div class="card"><div class="label">PAYMENT PENDING</div><div class="value negative" id="pendingTotal">₹0</div><div class="sub">Pending amount to receive</div></div>
+    </div>
+    <div class="grid">
+      <div class="section"><div class="sectionhead"><div><div class="label">LATEST ACTIVITY</div><h3>Recent Payments</h3></div><button class="btn light" onclick="showPage(&#39;payments&#39;)">View all</button></div><div id="recentPayments"><div class="tablewrap"><table class="data"><thead><tr><th>DATE</th><th>PARTY</th><th>TYPE</th><th>AMOUNT</th></tr></thead><tbody><tr><td>2026-07-09</td><td>TITAN LESAR</td><td>Received</td><td class="amount">₹500</td></tr><tr><td>2026-07-29</td><td>TITAN LESAR</td><td>Received</td><td class="amount">₹2,000</td></tr><tr><td>2026-07-08</td><td>TITAN LESAR</td><td>Received</td><td class="amount">₹5,000</td></tr><tr><td>2026-08-16</td><td>TITAN LESAR</td><td>Received</td><td class="amount">₹1,000</td></tr></tbody></table></div></div></div>
+      <div class="section"><div class="sectionhead"><div><div class="label">QUICK ACTIONS</div><h3>Start working</h3></div></div><div class="quick">
+        <button class="btn" onclick="openModal(&#39;party&#39;)">＋ Add Party</button>
+        <button class="btn light" onclick="openModal(&#39;product&#39;)">＋ Add Product</button>
+        <button class="btn light" onclick="openModal(&#39;payment&#39;)">＋ Add Payment</button>
+      </div></div>
+    </div>
+  </section>
+
+  <section id="parties" class="page" style="display: none;"><div class="section"><div class="sectionhead"><div><div class="label">PARTY MASTER</div><h3>Customers &amp; Suppliers</h3></div><button class="btn red" onclick="openModal(&#39;party&#39;)">＋ Add Party</button></div><div class="tablewrap"><table class="data"><thead><tr><th>PARTY NAME</th><th>PHONE</th><th>CITY</th><th>OPENING BAL</th><th>PRODUCT AMT</th><th>TOTAL AMOUNT</th><th>RECEIVED</th><th>PENDING</th><th>ACTION</th></tr></thead><tbody id="partyRows"><tr><td><b>TITAN LESAR</b></td><td>+91 92745 34590</td><td>AHMEDABAD</td><td class="amount">₹-7,500</td><td class="amount">₹5,900</td><td class="amount">₹-1,600</td><td class="amount positive">₹8,500</td><td class="amount negative">₹0</td><td><div class="actions"><button class="iconbtn" title="Export Ledger to Excel" onclick="exportPartyLedger(&#39;1788255804203&#39;)">📊 Ledger</button><button class="iconbtn" title="Edit Party" onclick="editParty(&#39;1788255804203&#39;)">✏️ Edit</button><button class="iconbtn" title="Delete Party" onclick="del(&#39;parties&#39;,&#39;1788255804203&#39;)">🗑</button></div></td></tr></tbody></table></div></div></section>
+
+  <section id="products" class="page" style="display: none;"><div class="section"><div class="sectionhead"><div><div><div class="label">PRODUCT MASTER</div><h3>Products &amp; Quantity</h3></div></div><button class="btn red" onclick="openModal(&#39;product&#39;)">＋ Add Product</button></div><div class="tablewrap"><table class="data"><thead><tr><th>PRODUCT NAME</th><th>PARTY</th><th>QTY</th><th>RATE</th><th>AMOUNT</th><th>ACTION</th></tr></thead><tbody id="productRows"><tr><td><b>PC MAKING</b></td><td>TITAN LESAR</td><td>3</td><td>₹500</td><td class="amount">₹1,500</td><td><div class="actions"><button class="iconbtn" title="Edit Product" onclick="editProduct(&#39;1788255823917&#39;)">✏️ Edit</button><button class="iconbtn" onclick="del(&#39;products&#39;,&#39;1788255823917&#39;)">🗑</button></div></td></tr><tr><td><b>DIA SOLDIRING MACHINE VIDEO</b></td><td>TITAN LESAR</td><td>1</td><td>₹500</td><td class="amount">₹500</td><td><div class="actions"><button class="iconbtn" title="Edit Product" onclick="editProduct(&#39;1788255949270&#39;)">✏️ Edit</button><button class="iconbtn" onclick="del(&#39;products&#39;,&#39;1788255949270&#39;)">🗑</button></div></td></tr><tr><td><b>LESER MARKING MACHINE VIDEO</b></td><td>TITAN LESAR</td><td>1</td><td>₹500</td><td class="amount">₹500</td><td><div class="actions"><button class="iconbtn" title="Edit Product" onclick="editProduct(&#39;1788255969083&#39;)">✏️ Edit</button><button class="iconbtn" onclick="del(&#39;products&#39;,&#39;1788255969083&#39;)">🗑</button></div></td></tr><tr><td><b>CNC ROUTER MACHINE</b></td><td>TITAN LESAR</td><td>1</td><td>₹1,000</td><td class="amount">₹1,000</td><td><div class="actions"><button class="iconbtn" title="Edit Product" onclick="editProduct(&#39;1788257177164&#39;)">✏️ Edit</button><button class="iconbtn" onclick="del(&#39;products&#39;,&#39;1788257177164&#39;)">🗑</button></div></td></tr><tr><td><b>RUST REMOVEL MACHINE VIDEO</b></td><td>TITAN LESAR</td><td>1</td><td>₹300</td><td class="amount">₹300</td><td><div class="actions"><button class="iconbtn" title="Edit Product" onclick="editProduct(&#39;1788257350406&#39;)">✏️ Edit</button><button class="iconbtn" onclick="del(&#39;products&#39;,&#39;1788257350406&#39;)">🗑</button></div></td></tr><tr><td><b>CNC ROUTER MACHINE</b></td><td>TITAN LESAR</td><td>1</td><td>₹1,000</td><td class="amount">₹1,000</td><td><div class="actions"><button class="iconbtn" title="Edit Product" onclick="editProduct(&#39;1788258119035&#39;)">✏️ Edit</button><button class="iconbtn" onclick="del(&#39;products&#39;,&#39;1788258119035&#39;)">🗑</button></div></td></tr><tr><td><b>DIA SOLDIRING MACHINE VIDEO</b></td><td>TITAN LESAR</td><td>1</td><td>₹500</td><td class="amount">₹500</td><td><div class="actions"><button class="iconbtn" title="Edit Product" onclick="editProduct(&#39;1788258155346&#39;)">✏️ Edit</button><button class="iconbtn" onclick="del(&#39;products&#39;,&#39;1788258155346&#39;)">🗑</button></div></td></tr><tr><td><b>LESER WELDING VIDEO</b></td><td>TITAN LESAR</td><td>1</td><td>₹500</td><td class="amount">₹500</td><td><div class="actions"><button class="iconbtn" title="Edit Product" onclick="editProduct(&#39;1788258172231&#39;)">✏️ Edit</button><button class="iconbtn" onclick="del(&#39;products&#39;,&#39;1788258172231&#39;)">🗑</button></div></td></tr><tr><td><b>LASER WELDING SHORT VIDEO</b></td><td>TITAN LESAR</td><td>1</td><td>₹100</td><td class="amount">₹100</td><td><div class="actions"><button class="iconbtn" title="Edit Product" onclick="editProduct(&#39;1788258194772&#39;)">✏️ Edit</button><button class="iconbtn" onclick="del(&#39;products&#39;,&#39;1788258194772&#39;)">🗑</button></div></td></tr></tbody></table></div></div></section>
+
+  <section id="payments" class="page" style="display: none;">
+<div class="stats" style="grid-template-columns:repeat(2,1fr);margin-bottom:18px">
+  <div class="card"><div class="label">PAYMENT RECEIVED</div><div class="value positive" id="paymentPageReceived">₹8,500</div><div class="sub">Total received payments</div></div>
+  <div class="card"><div class="label">PAYMENT PENDING</div><div class="value negative" id="paymentPagePending">₹0</div><div class="sub">Total pending amount</div></div>
+</div>
+<div class="section"><div class="sectionhead"><div><div class="label">PAYMENT LEDGER</div><h3>Payment History</h3></div><button class="btn red" onclick="openModal(&#39;payment&#39;)">＋ Add Payment</button></div><div class="tablewrap"><table class="data"><thead><tr><th>DATE</th><th>PARTY</th><th>TYPE</th><th>AMOUNT</th><th>MODE</th><th>NOTE</th><th>ACTION</th></tr></thead><tbody id="paymentRows"><tr><td>2026-07-09</td><td><b>TITAN LESAR</b></td><td><span class="positive">Received</span></td><td class="amount">₹500</td><td>UPI</td><td>—</td><td><div class="actions"><button class="iconbtn" title="Edit Payment" onclick="editPayment(&#39;1788266930100&#39;)">✏️ Edit</button><button class="iconbtn" onclick="del(&#39;payments&#39;,&#39;1788266930100&#39;)">🗑</button></div></td></tr><tr><td>2026-07-29</td><td><b>TITAN LESAR</b></td><td><span class="positive">Received</span></td><td class="amount">₹2,000</td><td>UPI</td><td>phone pay</td><td><div class="actions"><button class="iconbtn" title="Edit Payment" onclick="editPayment(&#39;1788266887140&#39;)">✏️ Edit</button><button class="iconbtn" onclick="del(&#39;payments&#39;,&#39;1788266887140&#39;)">🗑</button></div></td></tr><tr><td>2026-07-08</td><td><b>TITAN LESAR</b></td><td><span class="positive">Received</span></td><td class="amount">₹5,000</td><td>UPI</td><td>PHONE PAY</td><td><div class="actions"><button class="iconbtn" title="Edit Payment" onclick="editPayment(&#39;1788259475363&#39;)">✏️ Edit</button><button class="iconbtn" onclick="del(&#39;payments&#39;,&#39;1788259475363&#39;)">🗑</button></div></td></tr><tr><td>2026-08-16</td><td><b>TITAN LESAR</b></td><td><span class="positive">Received</span></td><td class="amount">₹1,000</td><td>UPI</td><td>PHONE PAY</td><td><div class="actions"><button class="iconbtn" title="Edit Payment" onclick="editPayment(&#39;1788255870229&#39;)">✏️ Edit</button><button class="iconbtn" onclick="del(&#39;payments&#39;,&#39;1788255870229&#39;)">🗑</button></div></td></tr></tbody></table></div></div></section>
+</main></div>
+
+<div class="modal" id="modal"><div class="modalbox"><div class="modalhead"><h3 id="modalTitle">Add Product</h3><button class="iconbtn" onclick="closeModal()">✕</button></div><div id="modalBody"><div class="formgrid"><div class="full"><label>Product Name</label><input id="pr_name" list="productNames" placeholder="e.g. Bearing Housing" oninput="autoFillRate()"><datalist id="productNames"><option value="PC MAKING"></option><option value="DIA SOLDIRING MACHINE VIDEO"></option><option value="LESER MARKING MACHINE VIDEO"></option><option value="CNC ROUTER MACHINE"></option><option value="RUST REMOVEL MACHINE VIDEO"></option><option value="LESER WELDING VIDEO"></option><option value="LASER WELDING SHORT VIDEO"></option></datalist></div><div><label>Party</label><select id="pr_party"><option value="">Select party</option><option value="1788255804203">TITAN LESAR</option></select></div><div><label>Quantity</label><input id="pr_qty" type="number" value="0"></div><div><label>Rate</label><input id="pr_rate" type="number" value="0"></div></div></div><div class="modalfoot"><button class="btn light" onclick="closeModal()">Cancel</button><button class="btn red" id="saveBtn">Update Payment</button></div></div></div>
+<div class="toast" id="toast" style="display: none;">Backup imported successfully</div>
+
+<script>
+const db={parties:JSON.parse(localStorage.getItem('bm_parties')||'[]'),products:JSON.parse(localStorage.getItem('bm_products')||'[]'),payments:JSON.parse(localStorage.getItem('bm_payments')||'[]')};
+
+/* ===================== CLOUD SYNC + LOGIN (Firebase) ===================== */
+/* Apna Firebase project ka config yahan paste karo (Project Settings > General > Your apps): */
+const firebaseConfig = {
+  apiKey: "AIzaSyDSRpNQRturGv5mAzdseR7l1LGyA875a68",
+  authDomain: "engineering-manegment.firebaseapp.com",
+  projectId: "engineering-manegment",
+  storageBucket: "engineering-manegment.firebasestorage.app",
+  messagingSenderId: "1019731255772",
+  appId: "1:1019731255772:web:8a7f2f5dabf611fcb56f19"
+};
+let cloudEnabled=false, docRef=null, unsub=null, isRemoteUpdate=false, authMode='login';
+function isConfigFilled(){return firebaseConfig.apiKey && !firebaseConfig.apiKey.startsWith('PASTE_')}
+function initCloud(){
+ const statusEl=document.getElementById('syncStatus');
+ if(!isConfigFilled()){
+   statusEl.innerHTML='☁ Cloud sync: not set up<br><small>Data saved on this device only</small>';
+   document.getElementById('appRoot').style.display='grid';
+   return;
+ }
+ try{
+   if(!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+   firebase.auth().onAuthStateChanged(user=>{
+     if(user){
+       document.getElementById('loginScreen').style.display='none';
+       document.getElementById('appRoot').style.display='grid';
+       document.getElementById('accountBox').style.display='block';
+       document.getElementById('accountEmail').textContent=user.email;
+       connectUserData(user.uid);
+     } else {
+       document.getElementById('loginScreen').style.display='flex';
+       document.getElementById('appRoot').style.display='none';
+       document.getElementById('accountBox').style.display='none';
+       cloudEnabled=false;
+       if(unsub){unsub();unsub=null;}
+     }
+   });
+ }catch(e){
+   console.error(e);
+   statusEl.innerHTML='☁ Cloud sync: connection error<br><small>Check Firebase config</small>';
+   document.getElementById('appRoot').style.display='grid';
+ }
+}
+function connectUserData(uid){
+ if(unsub) unsub();
+ docRef=firebase.firestore().collection('bm_data').doc(uid);
+ const statusEl=document.getElementById('syncStatus');
+ statusEl.innerHTML='☁ Cloud sync: connecting…';
+ unsub=docRef.onSnapshot(snap=>{
+   cloudEnabled=true;
+   statusEl.innerHTML='☁ Cloud sync: active<br><small>Live across all devices</small>';
+   if(snap.exists){
+     const data=snap.data();
+     isRemoteUpdate=true;
+     db.parties=data.parties||[]; db.products=data.products||[]; db.payments=data.payments||[];
+     Object.keys(db).forEach(k=>localStorage.setItem('bm_'+k,JSON.stringify(db[k])));
+     render();
+     isRemoteUpdate=false;
+   } else {
+     docRef.set({parties:db.parties,products:db.products,payments:db.payments});
+   }
+ },err=>{
+   console.error(err);
+   cloudEnabled=false;
+   statusEl.innerHTML='☁ Cloud sync: error<br><small>'+esc(err.message||'check rules')+'</small>';
+ });
+}
+function toggleAuthMode(){
+ authMode=authMode==='login'?'signup':'login';
+ document.getElementById('authErr').textContent='';
+ if(authMode==='signup'){
+   document.getElementById('loginTitle').textContent='Create your account';
+   document.getElementById('authBtn').textContent='Sign Up';
+   document.getElementById('authSwitch').innerHTML='Already have an account? <a onclick="toggleAuthMode()">Login</a>';
+ } else {
+   document.getElementById('loginTitle').textContent='Login to your account';
+   document.getElementById('authBtn').textContent='Login';
+   document.getElementById('authSwitch').innerHTML='New here? <a onclick="toggleAuthMode()">Create an account</a>';
+ }
+}
+function doLogin(){
+ if(!isConfigFilled()){document.getElementById('authErr').textContent='Cloud not set up yet.';return}
+ const email=document.getElementById('auth_email').value.trim();
+ const pass=document.getElementById('auth_password').value;
+ const errEl=document.getElementById('authErr');
+ errEl.textContent='';
+ if(!email||!pass){errEl.textContent='Email aur password dono bharo.';return}
+ if(pass.length<6){errEl.textContent='Password kam se kam 6 character ka ho.';return}
+ const action=authMode==='signup'
+   ?firebase.auth().createUserWithEmailAndPassword(email,pass)
+   :firebase.auth().signInWithEmailAndPassword(email,pass);
+ action.catch(e=>{errEl.textContent=e.message.replace('Firebase: ','')});
+}
+function doLogout(){
+ if(confirm('Logout ho jaye?')) firebase.auth().signOut();
+}
+/* ==================================================================== */
+
+const save=()=>{
+ Object.keys(db).forEach(k=>localStorage.setItem('bm_'+k,JSON.stringify(db[k])));
+ render();
+ if(cloudEnabled && docRef && !isRemoteUpdate){
+   docRef.set({parties:db.parties,products:db.products,payments:db.payments}).catch(e=>{console.error(e);toast('Cloud save failed')});
+ }
+};
+document.getElementById('today').textContent=new Date().toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'});
+function money(n){return '₹'+Number(n||0).toLocaleString('en-IN',{maximumFractionDigits:2})}
+function esc(s){return String(s||'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
+function partyName(id){return db.parties.find(x=>x.id===id)?.name||'—'}
+function render(){
+ document.getElementById('partyCount').textContent=db.parties.length;
+ document.getElementById('productCount').textContent=db.products.length;
+ document.getElementById('qtyTotal').textContent=db.products.reduce((a,x)=>a+Number(x.qty||0),0);
+ const received=db.payments.filter(x=>x.type==='Received').reduce((a,x)=>a+Number(x.amount||0),0);
+ const totalProductAmount=db.products.reduce((a,x)=>a+(Number(x.qty||0)*Number(x.rate||0)),0);
+ const totalOpeningBalance=db.parties.reduce((a,x)=>a+Number(x.balance||0),0);
+ const grandTotal=totalProductAmount+totalOpeningBalance;
+ const pending=Math.max(0,grandTotal-received);
+ document.getElementById('receivedTotal').textContent=money(received);
+ document.getElementById('pendingTotal').textContent=money(pending);
+ const pageReceived=document.getElementById('paymentPageReceived');
+ const pagePending=document.getElementById('paymentPagePending');
+ if(pageReceived) pageReceived.textContent=money(received);
+ if(pagePending) pagePending.textContent=money(pending);
+ document.getElementById('partyRows').innerHTML=db.parties.length?db.parties.map(x=>{
+   const productTotal=db.products.filter(p=>p.party===x.id).reduce((a,p)=>a+(Number(p.qty||0)*Number(p.rate||0)),0);
+   const openingBalance=Number(x.balance||0);
+   const partyTotal=productTotal+openingBalance;
+   const partyReceived=db.payments.filter(p=>p.party===x.id && p.type==='Received').reduce((a,p)=>a+Number(p.amount||0),0);
+   const partyPending=Math.max(0,partyTotal-partyReceived);
+   return `<tr><td><b>${esc(x.name)}</b></td><td>${esc(x.phone)}</td><td>${esc(x.city)}</td><td class="amount">${money(openingBalance)}</td><td class="amount">${money(productTotal)}</td><td class="amount">${money(partyTotal)}</td><td class="amount positive">${money(partyReceived)}</td><td class="amount negative">${money(partyPending)}</td><td><div class="actions"><button class="iconbtn" title="Export Ledger to Excel" onclick="exportPartyLedger('${x.id}')">📊 Ledger</button><button class="iconbtn" title="Edit Party" onclick="editParty('${x.id}')">✏️ Edit</button><button class="iconbtn" title="Delete Party" onclick="del('parties','${x.id}')">🗑</button></div></td></tr>`;
+ }).join(''):'<tr><td colspan="9" class="empty">No parties added yet.</td></tr>';
+ document.getElementById('productRows').innerHTML=db.products.length?db.products.map(x=>`<tr><td><b>${esc(x.name)}</b></td><td>${esc(partyName(x.party))}</td><td>${x.qty}</td><td>${money(x.rate)}</td><td class="amount">${money(Number(x.qty)*Number(x.rate))}</td><td><div class="actions"><button class="iconbtn" title="Edit Product" onclick="editProduct('${x.id}')">✏️ Edit</button><button class="iconbtn" onclick="del('products','${x.id}')">🗑</button></div></td></tr>`).join(''):'<tr><td colspan="6" class="empty">No products added yet.</td></tr>';
+ const rows=db.payments.slice().reverse().map(x=>`<tr><td>${x.date}</td><td><b>${esc(partyName(x.party))}</b></td><td><span class="${x.type==='Received'?'positive':'negative'}">${x.type}</span></td><td class="amount">${money(x.amount)}</td><td>${esc(x.mode)}</td><td>${esc(x.note||'—')}</td><td><div class="actions"><button class="iconbtn" title="Edit Payment" onclick="editPayment('${x.id}')">✏️ Edit</button><button class="iconbtn" onclick="del('payments','${x.id}')">🗑</button></div></td></tr>`).join('');
+ document.getElementById('paymentRows').innerHTML=rows||'<tr><td colspan="7" class="empty">No payment history yet.</td></tr>';
+ document.getElementById('recentPayments').innerHTML=db.payments.length?`<div class="tablewrap"><table class="data"><thead><tr><th>DATE</th><th>PARTY</th><th>TYPE</th><th>AMOUNT</th></tr></thead><tbody>${db.payments.slice(-5).reverse().map(x=>`<tr><td>${x.date}</td><td>${esc(partyName(x.party))}</td><td>${x.type}</td><td class="amount">${money(x.amount)}</td></tr>`).join('')}</tbody></table></div>`:'<div class="empty">No payment activity yet.</div>';
+}
+function showPage(id,el){
+ document.querySelectorAll('.page').forEach(x=>x.style.display='none');document.getElementById(id).style.display='block';
+ if(el){document.querySelectorAll('.nav button').forEach(x=>x.classList.remove('active'));el.classList.add('active')}
+ const map={dashboard:['Dashboard','Your party, product and payment overview.'],parties:['Party Management','Manage customers and suppliers.'],products:['Product Management','Manage products, quantity and rates.'],payments:['Payment History','Track received and paid payments.']};
+ document.getElementById('pageTitle').textContent=map[id][0];document.getElementById('pageSub').textContent=map[id][1];
+}
+let editingPartyId=null;
+function editParty(id){
+ const x=db.parties.find(p=>p.id===id); if(!x) return;
+ editingPartyId=id;
+ const body=document.getElementById('modalBody'), title=document.getElementById('modalTitle'), btn=document.getElementById('saveBtn');
+ title.textContent='Edit Party';
+ body.innerHTML=`<div class="formgrid"><div><label>Party Name</label><input id="p_name" value="${esc(x.name)}"></div><div><label>Phone</label><input id="p_phone" value="${esc(x.phone)}"></div><div><label>City</label><input id="p_city" value="${esc(x.city)}"></div><div><label>Opening Balance</label><input id="p_balance" type="number" value="${x.balance||0}"></div></div>`;
+ btn.textContent='Update Party';
+ btn.onclick=()=>{
+   let n=document.getElementById('p_name').value.trim(); if(!n) return alert('Enter party name');
+   Object.assign(x,{name:n,phone:document.getElementById('p_phone').value,city:document.getElementById('p_city').value,balance:document.getElementById('p_balance').value});
+   save(); closeModal(); toast('Party updated successfully'); editingPartyId=null;
+ };
+ document.getElementById('modal').classList.add('show');
+}
+let editingPaymentId=null;
+function editPayment(id){
+ const x=db.payments.find(p=>p.id===id); if(!x) return;
+ editingPaymentId=id;
+ const body=document.getElementById('modalBody'), title=document.getElementById('modalTitle'), btn=document.getElementById('saveBtn');
+ title.textContent='Edit Payment Entry';
+ let opts=db.parties.map(p=>`<option value="${p.id}" ${p.id===x.party?'selected':''}>${esc(p.name)}</option>`).join('');
+ body.innerHTML=`<div class="formgrid"><div><label>Date</label><input id="pay_date" type="date" value="${x.date}"></div><div><label>Party</label><select id="pay_party">${opts||'<option value="">Add a party first</option>'}</select></div><div><label>Type</label><select id="pay_type"><option ${x.type==='Received'?'selected':''}>Received</option><option ${x.type==='Paid'?'selected':''}>Paid</option></select></div><div><label>Amount</label><input id="pay_amount" type="number" value="${x.amount}"></div><div><label>Payment Mode</label><select id="pay_mode"><option ${x.mode==='Cash'?'selected':''}>Cash</option><option ${x.mode==='Bank Transfer'?'selected':''}>Bank Transfer</option><option ${x.mode==='UPI'?'selected':''}>UPI</option><option ${x.mode==='Cheque'?'selected':''}>Cheque</option></select></div><div><label>Note</label><input id="pay_note" value="${esc(x.note||'')}" placeholder="Optional note"></div></div>`;
+ btn.textContent='Update Payment';
+ btn.onclick=()=>{
+   if(!document.getElementById('pay_party').value) return alert('Select party');
+   Object.assign(x,{date:document.getElementById('pay_date').value,party:document.getElementById('pay_party').value,type:document.getElementById('pay_type').value,amount:document.getElementById('pay_amount').value,mode:document.getElementById('pay_mode').value,note:document.getElementById('pay_note').value});
+   save(); closeModal(); toast('Payment updated successfully'); editingPaymentId=null;
+ };
+ document.getElementById('modal').classList.add('show');
+}
+function autoFillRate(){
+ const nameEl=document.getElementById('pr_name'); if(!nameEl) return;
+ const n=nameEl.value.trim().toLowerCase(); if(!n) return;
+ const match=db.products.slice().reverse().find(p=>String(p.name).trim().toLowerCase()===n);
+ if(match){const rateEl=document.getElementById('pr_rate'); if(rateEl) rateEl.value=match.rate;}
+}
+let editingProductId=null;
+function editProduct(id){
+ const x=db.products.find(p=>p.id===id); if(!x) return;
+ editingProductId=id;
+ const body=document.getElementById('modalBody'), title=document.getElementById('modalTitle'), btn=document.getElementById('saveBtn');
+ title.textContent='Edit Product';
+ let opts=db.parties.map(p=>`<option value="${p.id}" ${p.id===x.party?'selected':''}>${esc(p.name)}</option>`).join('');
+ let plist=[...new Set(db.products.map(p=>p.name))].map(n=>`<option value="${esc(n)}">`).join('');
+ body.innerHTML=`<div class="formgrid"><div class="full"><label>Product Name</label><input id="pr_name" list="productNames" value="${esc(x.name)}" oninput="autoFillRate()"><datalist id="productNames">${plist}</datalist></div><div><label>Party</label><select id="pr_party"><option value="">Select party</option>${opts}</select></div><div><label>Quantity</label><input id="pr_qty" type="number" value="${x.qty}"></div><div><label>Rate</label><input id="pr_rate" type="number" value="${x.rate}"></div></div>`;
+ btn.textContent='Update Product';
+ btn.onclick=()=>{
+   let n=document.getElementById('pr_name').value.trim(); if(!n) return alert('Enter product name');
+   Object.assign(x,{name:n,party:document.getElementById('pr_party').value,qty:document.getElementById('pr_qty').value,rate:document.getElementById('pr_rate').value});
+   save(); closeModal(); toast('Product updated successfully'); editingProductId=null;
+ };
+ document.getElementById('modal').classList.add('show');
+}
+function openModal(type){
+ editingPartyId=null;
+ editingPaymentId=null;
+ editingProductId=null;
+ const body=document.getElementById('modalBody'), title=document.getElementById('modalTitle'), btn=document.getElementById('saveBtn');
+ if(type==='party'){btn.textContent='Save Party';title.textContent='Add New Party';body.innerHTML=`<div class="formgrid"><div><label>Party Name</label><input id="p_name" placeholder="e.g. ABC Industries"></div><div><label>Phone</label><input id="p_phone" placeholder="Mobile number"></div><div><label>City</label><input id="p_city" placeholder="City"></div><div><label>Opening Balance</label><input id="p_balance" type="number" value="0"></div></div>`;btn.onclick=()=>{let n=document.getElementById('p_name').value.trim();if(!n)return alert('Enter party name');db.parties.push({id:Date.now()+'',name:n,phone:document.getElementById('p_phone').value,city:document.getElementById('p_city').value,balance:document.getElementById('p_balance').value});save();closeModal();toast('Party added successfully')}}
+ if(type==='product'){title.textContent='Add Product';let opts=db.parties.map(x=>`<option value="${x.id}">${esc(x.name)}</option>`).join('');let plist=[...new Set(db.products.map(p=>p.name))].map(n=>`<option value="${esc(n)}">`).join('');body.innerHTML=`<div class="formgrid"><div class="full"><label>Product Name</label><input id="pr_name" list="productNames" placeholder="e.g. Bearing Housing" oninput="autoFillRate()"><datalist id="productNames">${plist}</datalist></div><div><label>Party</label><select id="pr_party"><option value="">Select party</option>${opts}</select></div><div><label>Quantity</label><input id="pr_qty" type="number" value="0"></div><div><label>Rate</label><input id="pr_rate" type="number" value="0"></div></div>`;btn.onclick=()=>{let n=document.getElementById('pr_name').value.trim();if(!n)return alert('Enter product name');db.products.push({id:Date.now()+'',name:n,party:document.getElementById('pr_party').value,qty:document.getElementById('pr_qty').value,rate:document.getElementById('pr_rate').value});save();closeModal();toast('Product added successfully')}}
+ if(type==='payment'){title.textContent='Add Payment Entry';let opts=db.parties.map(x=>`<option value="${x.id}">${esc(x.name)}</option>`).join('');body.innerHTML=`<div class="formgrid"><div><label>Date</label><input id="pay_date" type="date" value="${new Date().toISOString().slice(0,10)}"></div><div><label>Party</label><select id="pay_party">${opts||'<option value="">Add a party first</option>'}</select></div><div><label>Type</label><select id="pay_type"><option>Received</option><option>Paid</option></select></div><div><label>Amount</label><input id="pay_amount" type="number" value="0"></div><div><label>Payment Mode</label><select id="pay_mode"><option>Cash</option><option>Bank Transfer</option><option>UPI</option><option>Cheque</option></select></div><div><label>Note</label><input id="pay_note" placeholder="Optional note"></div></div>`;btn.onclick=()=>{if(!document.getElementById('pay_party').value)return alert('Select party');db.payments.push({id:Date.now()+'',date:document.getElementById('pay_date').value,party:document.getElementById('pay_party').value,type:document.getElementById('pay_type').value,amount:document.getElementById('pay_amount').value,mode:document.getElementById('pay_mode').value,note:document.getElementById('pay_note').value});save();closeModal();toast('Payment saved successfully')}}
+ document.getElementById('modal').classList.add('show')
+}
+function closeModal(){document.getElementById('modal').classList.remove('show');editingPartyId=null;editingPaymentId=null;editingProductId=null;}
+function del(k,id){if(confirm('Delete this record?')){db[k]=db[k].filter(x=>x.id!==id);save();toast('Record deleted')}}
+function toast(t){let e=document.getElementById('toast');e.textContent=t;e.style.display='block';setTimeout(()=>e.style.display='none',2200)}
+function exportPartyLedger(id){
+ const x=db.parties.find(p=>p.id===id); if(!x) return;
+ const openingBalance=Number(x.balance||0);
+ const products=db.products.filter(p=>p.party===id);
+ const payments=db.payments.filter(p=>p.party===id);
+ const productTotal=products.reduce((a,p)=>a+(Number(p.qty||0)*Number(p.rate||0)),0);
+ const received=payments.filter(p=>p.type==='Received').reduce((a,p)=>a+Number(p.amount||0),0);
+ const paid=payments.filter(p=>p.type==='Paid').reduce((a,p)=>a+Number(p.amount||0),0);
+ const totalAmount=productTotal+openingBalance;
+ const pending=Math.max(0,totalAmount-received);
+ const ncols=5;
+ const aoa=[]; const merges=[]; const styleQ=[];
+ const put=(arr,style)=>{const r=aoa.length;aoa.push(arr);if(style)styleQ.push({r,c1:0,c2:Math.max(0,arr.length-1),style});return r};
+ const S={
+  title:{font:{bold:true,sz:18,color:{rgb:"FFFFFF"}},fill:{fgColor:{rgb:"171717"}},alignment:{horizontal:"center",vertical:"center"}},
+  subtitle:{font:{bold:true,italic:true,sz:10,color:{rgb:"FF746F"}},fill:{fgColor:{rgb:"171717"}},alignment:{horizontal:"center"}},
+  section:{font:{bold:true,sz:11,color:{rgb:"FFFFFF"}},fill:{fgColor:{rgb:"ED3029"}},alignment:{horizontal:"left",vertical:"center"}},
+  colHead:{font:{bold:true,sz:10,color:{rgb:"24272B"}},fill:{fgColor:{rgb:"FAFAFA"}},border:{bottom:{style:"thin",color:{rgb:"CCCCCC"}}}},
+  label:{font:{bold:true,sz:10,color:{rgb:"6F7378"}}},
+  value:{font:{sz:11,color:{rgb:"24272B"}}},
+  cell:{border:{bottom:{style:"thin",color:{rgb:"EEEEEE"}}}},
+  totalRow:{font:{bold:true},border:{top:{style:"thin",color:{rgb:"999999"}}}},
+  statLabel:{font:{bold:true,sz:9,color:{rgb:"7E8288"}}},
+  statPos:{font:{bold:true,sz:14,color:{rgb:"2F9E6F"}}},
+  statNeg:{font:{bold:true,sz:14,color:{rgb:"E02C27"}}},
+  statDark:{font:{bold:true,sz:14,color:{rgb:"171717"}}}
+ };
+ put(['ENGINEERING MANAGEMENT SYSTEM','','','','']); merges.push({s:{r:0,c:0},e:{r:0,c:4}}); styleQ.push({r:0,c1:0,c2:4,style:S.title});
+ put(['PARTY LEDGER — '+x.name.toUpperCase(),'','','','']); merges.push({s:{r:1,c:0},e:{r:1,c:4}}); styleQ.push({r:1,c1:0,c2:4,style:S.subtitle});
+ put([]);
+ let r=put(['Party Name',x.name,'','','']); styleQ.push({r,c1:0,c2:0,style:S.label}); styleQ.push({r,c1:1,c2:1,style:S.value});
+ r=put(['Phone',x.phone||'—','','','']); styleQ.push({r,c1:0,c2:0,style:S.label}); styleQ.push({r,c1:1,c2:1,style:S.value});
+ r=put(['City',x.city||'—','','','']); styleQ.push({r,c1:0,c2:0,style:S.label}); styleQ.push({r,c1:1,c2:1,style:S.value});
+ r=put(['Opening Balance',openingBalance,'','','']); styleQ.push({r,c1:0,c2:0,style:S.label}); styleQ.push({r,c1:1,c2:1,style:S.value});
+ put([]);
+ r=put(['PRODUCTS','','','','']); merges.push({s:{r,c:0},e:{r,c:3}}); styleQ.push({r,c1:0,c2:3,style:S.section});
+ r=put(['Product Name','Qty','Rate','Amount']); styleQ.push({r,c1:0,c2:3,style:S.colHead});
+ products.forEach(p=>{r=put([p.name,Number(p.qty||0),Number(p.rate||0),Number(p.qty||0)*Number(p.rate||0)]);styleQ.push({r,c1:0,c2:3,style:S.cell})});
+ r=put(['','','Product Total',productTotal]); styleQ.push({r,c1:0,c2:3,style:S.totalRow});
+ put([]);
+ r=put(['PAYMENTS','','','','']); merges.push({s:{r,c:0},e:{r,c:4}}); styleQ.push({r,c1:0,c2:4,style:S.section});
+ r=put(['Date','Type','Amount','Mode','Note']); styleQ.push({r,c1:0,c2:4,style:S.colHead});
+ payments.forEach(p=>{r=put([p.date,p.type,Number(p.amount||0),p.mode||'',p.note||'']);styleQ.push({r,c1:0,c2:4,style:S.cell})});
+ put([]);
+ r=put(['SUMMARY','','','','']); merges.push({s:{r,c:0},e:{r,c:4}}); styleQ.push({r,c1:0,c2:4,style:S.section});
+ r=put(['Opening Balance',openingBalance]); styleQ.push({r,c1:0,c2:0,style:S.statLabel}); styleQ.push({r,c1:1,c2:1,style:S.statDark});
+ r=put(['Product Amount',productTotal]); styleQ.push({r,c1:0,c2:0,style:S.statLabel}); styleQ.push({r,c1:1,c2:1,style:S.statDark});
+ r=put(['Total Amount (Opening + Product)',totalAmount]); styleQ.push({r,c1:0,c2:0,style:S.statLabel}); styleQ.push({r,c1:1,c2:1,style:S.statDark});
+ r=put(['Total Received',received]); styleQ.push({r,c1:0,c2:0,style:S.statLabel}); styleQ.push({r,c1:1,c2:1,style:S.statPos});
+ r=put(['Total Paid',paid]); styleQ.push({r,c1:0,c2:0,style:S.statLabel}); styleQ.push({r,c1:1,c2:1,style:S.statDark});
+ r=put(['Pending Amount',pending]); styleQ.push({r,c1:0,c2:0,style:S.statLabel}); styleQ.push({r,c1:1,c2:1,style:S.statNeg});
+ const ws=XLSX.utils.aoa_to_sheet(aoa);
+ ws['!cols']=[{wch:28},{wch:16},{wch:14},{wch:16},{wch:22}];
+ ws['!merges']=merges;
+ applyStyles(ws,styleQ);
+ const wb=XLSX.utils.book_new();
+ XLSX.utils.book_append_sheet(wb,ws,'Ledger');
+ XLSX.writeFile(wb,`${x.name.replace(/[^a-z0-9]/gi,'_')}_ledger.xlsx`);
+ toast('Ledger exported to Excel');
+}
+function applyStyles(ws,styleQ){
+ styleQ.forEach(({r,c1,c2,style})=>{
+   for(let c=c1;c<=c2;c++){
+     const ref=XLSX.utils.encode_cell({r,c});
+     if(!ws[ref]) ws[ref]={t:'s',v:''};
+     ws[ref].s=style;
+   }
+ });
+}
+function exportAllExcel(){
+ const wb=XLSX.utils.book_new();
+ const totalParties=db.parties.length, totalProducts=db.products.length;
+ const totalProductAmount=db.products.reduce((a,x)=>a+(Number(x.qty||0)*Number(x.rate||0)),0);
+ const totalOpeningBalance=db.parties.reduce((a,x)=>a+Number(x.balance||0),0);
+ const received=db.payments.filter(x=>x.type==='Received').reduce((a,x)=>a+Number(x.amount||0),0);
+ const pending=Math.max(0,totalProductAmount+totalOpeningBalance-received);
+ const ncols=8;
+ const aoa=[]; const merges=[]; const styleQ=[];
+ const put=(arr)=>{const r=aoa.length;aoa.push(arr);return r};
+ const S={
+  title:{font:{bold:true,sz:18,color:{rgb:"FFFFFF"}},fill:{fgColor:{rgb:"171717"}},alignment:{horizontal:"center",vertical:"center"}},
+  subtitle:{font:{bold:true,italic:true,sz:10,color:{rgb:"FF746F"}},fill:{fgColor:{rgb:"171717"}},alignment:{horizontal:"center"}},
+  statCard:(bg,fg)=>({font:{bold:true,sz:16,color:{rgb:fg}},fill:{fgColor:{rgb:bg}},alignment:{horizontal:"center",vertical:"center"}}),
+  statLabel:{font:{bold:true,sz:9,color:{rgb:"FFFFFF"}},fill:{fgColor:{rgb:"2A2A2A"}},alignment:{horizontal:"center"}},
+  section:{font:{bold:true,sz:11,color:{rgb:"FFFFFF"}},fill:{fgColor:{rgb:"ED3029"}}},
+  colHead:{font:{bold:true,sz:10,color:{rgb:"24272B"}},fill:{fgColor:{rgb:"FAFAFA"}},border:{bottom:{style:"thin",color:{rgb:"CCCCCC"}}}},
+  cell:{border:{bottom:{style:"thin",color:{rgb:"EEEEEE"}}}}
+ };
+ let r=put(['ENGINEERING MANAGEMENT SYSTEM','','','','','','','']); merges.push({s:{r,c:0},e:{r,c:7}}); styleQ.push({r,c1:0,c2:7,style:S.title});
+ r=put(['BUSINESS DASHBOARD SUMMARY','','','','','','','']); merges.push({s:{r,c:0},e:{r,c:7}}); styleQ.push({r,c1:0,c2:7,style:S.subtitle});
+ put([]);
+ r=put(['TOTAL PARTIES','TOTAL PRODUCTS','','PAYMENT RECEIVED','','PAYMENT PENDING','','']);
+ merges.push({s:{r,c:0},e:{r,c:0}});
+ styleQ.push({r,c1:0,c2:0,style:S.statLabel}); styleQ.push({r,c1:1,c2:2,style:S.statLabel}); merges.push({s:{r,c:1},e:{r,c:2}});
+ styleQ.push({r,c1:3,c2:4,style:S.statLabel}); merges.push({s:{r,c:3},e:{r,c:4}});
+ styleQ.push({r,c1:5,c2:7,style:S.statLabel}); merges.push({s:{r,c:5},e:{r,c:7}});
+ r=put([totalParties,totalProducts,'',received,'',pending,'','']);
+ merges.push({s:{r,c:1},e:{r,c:2}}); merges.push({s:{r,c:3},e:{r,c:4}}); merges.push({s:{r,c:5},e:{r,c:7}});
+ styleQ.push({r,c1:0,c2:0,style:S.statCard("2A2A2A","FFFFFF")});
+ styleQ.push({r,c1:1,c2:2,style:S.statCard("E9443D","FFFFFF")});
+ styleQ.push({r,c1:3,c2:4,style:S.statCard("EAF7F0","287D59")});
+ styleQ.push({r,c1:5,c2:7,style:S.statCard("FCEBEA","E02C27")});
+ put([]);
+ r=put(['PARTY SUMMARY','','','','','','','']); merges.push({s:{r,c:0},e:{r,c:7}}); styleQ.push({r,c1:0,c2:7,style:S.section});
+ r=put(['PARTY NAME','PHONE','CITY','OPENING BAL','PRODUCT AMT','TOTAL AMOUNT','RECEIVED','PENDING']); styleQ.push({r,c1:0,c2:7,style:S.colHead});
+ db.parties.forEach(x=>{
+   const openingBalance=Number(x.balance||0);
+   const productTotal=db.products.filter(p=>p.party===x.id).reduce((a,p)=>a+(Number(p.qty||0)*Number(p.rate||0)),0);
+   const partyTotal=productTotal+openingBalance;
+   const partyReceived=db.payments.filter(p=>p.party===x.id && p.type==='Received').reduce((a,p)=>a+Number(p.amount||0),0);
+   const partyPending=Math.max(0,partyTotal-partyReceived);
+   r=put([x.name,x.phone||'',x.city||'',openingBalance,productTotal,partyTotal,partyReceived,partyPending]);
+   styleQ.push({r,c1:0,c2:7,style:S.cell});
+ });
+ const wsSummary=XLSX.utils.aoa_to_sheet(aoa);
+ wsSummary['!cols']=[{wch:22},{wch:16},{wch:14},{wch:13},{wch:13},{wch:13},{wch:13},{wch:13}];
+ wsSummary['!merges']=merges;
+ applyStyles(wsSummary,styleQ);
+ XLSX.utils.book_append_sheet(wb,wsSummary,'Dashboard');
+
+ const pAoa=[['PRODUCT NAME','PARTY','QTY','RATE','AMOUNT']]; const pStyle=[{r:0,c1:0,c2:4,style:S.colHead}];
+ db.products.forEach((p,i)=>{pAoa.push([p.name,partyName(p.party),Number(p.qty||0),Number(p.rate||0),Number(p.qty||0)*Number(p.rate||0)]);pStyle.push({r:i+1,c1:0,c2:4,style:S.cell})});
+ const wsProducts=XLSX.utils.aoa_to_sheet(pAoa);
+ wsProducts['!cols']=[{wch:26},{wch:20},{wch:10},{wch:12},{wch:14}];
+ applyStyles(wsProducts,pStyle);
+ XLSX.utils.book_append_sheet(wb,wsProducts,'Products');
+
+ const payAoa=[['DATE','PARTY','TYPE','AMOUNT','MODE','NOTE']]; const payStyle=[{r:0,c1:0,c2:5,style:S.colHead}];
+ db.payments.forEach((p,i)=>{payAoa.push([p.date,partyName(p.party),p.type,Number(p.amount||0),p.mode||'',p.note||'']);payStyle.push({r:i+1,c1:0,c2:5,style:S.cell})});
+ const wsPayments=XLSX.utils.aoa_to_sheet(payAoa);
+ wsPayments['!cols']=[{wch:12},{wch:20},{wch:10},{wch:12},{wch:16},{wch:22}];
+ applyStyles(wsPayments,payStyle);
+ XLSX.utils.book_append_sheet(wb,wsPayments,'Payments');
+
+ XLSX.writeFile(wb,'business_dashboard.xlsx');
+ toast('Dashboard exported to Excel');
+}
+function exportData(){let blob=new Blob([JSON.stringify(db,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='business-backup.json';a.click();URL.revokeObjectURL(a.href)}
+function importData(e){let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{try{let x=JSON.parse(r.result);if(!x.parties||!x.products||!x.payments)throw 0;Object.assign(db,x);save();toast('Backup imported successfully')}catch{alert('Invalid backup file')}};r.readAsText(f)}
+function clearData(){if(confirm('This will permanently clear all local data. Continue?')){db.parties=[];db.products=[];db.payments=[];save();toast('All data cleared')}}
+render();
+initCloud();
+</script>
+</body></html>
